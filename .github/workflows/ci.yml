@@ -20,6 +20,19 @@ jobs:
       - run: dotnet build --no-restore -c Release
       - run: dotnet test --no-build -c Release --collect:"XPlat Code Coverage"
 
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build API image
+        run: docker build -f backend/src/MobileLoginAuth.Api/Dockerfile backend
+      - name: Validate production compose file
+        working-directory: deploy
+        run: |
+          cp .env.example .env
+          sed -i 's/^JWT_SIGNING_KEY=.*/JWT_SIGNING_KEY=ci-only-key/; s/^RABBITMQ_PASSWORD=.*/RABBITMQ_PASSWORD=ci/' .env
+          docker compose -f docker-compose.prod.yml --env-file .env config -q
+
   mobile:
     runs-on: ubuntu-latest
     defaults:

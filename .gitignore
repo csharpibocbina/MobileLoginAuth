@@ -27,3 +27,6 @@ android/
 
 # OS
 .DS_Store
+
+# Deploy
+deploy/backups/

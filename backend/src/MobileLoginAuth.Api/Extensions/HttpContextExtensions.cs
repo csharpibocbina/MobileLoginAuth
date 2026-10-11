@@ -12,8 +12,8 @@ public static class HttpContextExtensions
     {
         var device = context.Request.Headers[DeviceHeader].FirstOrDefault()
                      ?? context.Request.Headers.UserAgent.FirstOrDefault();
-        var ip = context.Request.Headers["X-Forwarded-For"].FirstOrDefault()?.Split(',')[0].Trim()
-                 ?? context.Connection.RemoteIpAddress?.ToString();
+        // Behind the reverse proxy, UseForwardedHeaders has already put the real client IP here.
+        var ip = context.Connection.RemoteIpAddress?.ToString();
         return new ClientInfo(ip, device is { Length: > 200 } ? device[..200] : device);
     }
 

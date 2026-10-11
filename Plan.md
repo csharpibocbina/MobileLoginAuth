@@ -248,7 +248,7 @@ See section 4. Run on every push via GitHub Actions.
 README with: architecture diagram, setup steps, how to see emails (MailHog `http://localhost:8025`), RabbitMQ UI (`http://localhost:15672`), how to run tests.
 
 ### Phase 8 — Publish to the Apple App Store (M8)
-1. **Deploy the backend** to a public HTTPS host (e.g. Azure App Service or a VPS with Docker). Production config: managed RabbitMQ (e.g. CloudAMQP), real SMTP provider, JWT secret from environment/Key Vault, SQLite file on a persistent volume (or migrate to PostgreSQL/SQL Server if scale requires). Apple requires HTTPS (App Transport Security).
+1. **Deploy the backend** to a VPS with Docker and Caddy for HTTPS (see `deploy/DEPLOY.md`). Production config: RabbitMQ in its own container, real SMTP provider, JWT secret in the server-only `.env` file, SQLite file on a persistent Docker volume with daily backups (or migrate to PostgreSQL/SQL Server if scale requires). Apple requires HTTPS (App Transport Security).
 2. **[Jay]** **Apple Developer Program** membership (USD 99/year) and an App Store Connect app record with bundle id, e.g. `com.csharpibocbina.mobileloginauth`.
 3. **App config:** `app.config.ts` with `ios.bundleIdentifier`, version/build number, app icon (1024×1024), splash screen, production API URL.
 4. **Build:** `eas build --platform ios --profile production` (EAS handles certificates and provisioning profiles).
@@ -366,5 +366,5 @@ cd mobile && npm test -- --coverage
 3. **.NET version:** .NET 8 LTS (default).
 4. **Failed login for unknown email:** log only, no email (default, avoids spamming non-users).
 5. **Message bus library:** MassTransit over raw `RabbitMQ.Client` (default, gives retries/error queues for free).
-6. **Production hosting for the iOS release:** Azure App Service + CloudAMQP (default) vs. a single VPS running docker-compose.
+6. **Production hosting for the iOS release:** decided: a single VPS running Docker (Caddy for HTTPS, API, RabbitMQ, SQLite volume). See `deploy/DEPLOY.md`.
 7. **Apple Developer account:** needed under your name/company before M8; Claude can prepare the build and submission config, but signing in to App Store Connect and pressing Submit is done by you.

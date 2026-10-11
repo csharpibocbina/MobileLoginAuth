@@ -86,7 +86,9 @@ public class AuthFlowTests : IClassFixture<AuthFlowTests.Factory>
 
         types.Should().BeEquivalentTo(new[] { AuthEventType.LoginFailed, AuthEventType.LoginSucceeded, AuthEventType.Logout });
 
-        (await harness.Consumed.SelectAsync<AuthEvent>(m => m.Context.Message.Email == email).Take(3).Count()).Should().Be(3);
+        // Wait for the email consumer specifically (the SignalR consumer also consumes AuthEvent).
+        var emailConsumer = harness.GetConsumerHarness<EmailNotificationConsumer>();
+        (await emailConsumer.Consumed.SelectAsync<AuthEvent>(m => m.Context.Message.Email == email).Take(3).Count()).Should().Be(3);
         _factory.EmailSender.Verify(s => s.SendAsync(It.Is<EmailMessage>(m => m.To == email), It.IsAny<CancellationToken>()), Times.Exactly(3));
 
         var history = await client.GetFromJsonAsync<List<LoginHistoryItemDto>>("/api/users/me/login-history");
@@ -121,5 +123,24 @@ public class AuthFlowTests : IClassFixture<AuthFlowTests.Factory>
 
         (await client.DeleteAsync("/api/users/me")).StatusCode.Should().Be(HttpStatusCode.NoContent);
         (await client.GetAsync("/api/users/me")).StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task Login_BehindProxy_RecordsForwardedClientIp()
+    {
+        var client = _factory.CreateClient();
+        const string email = "proxy@example.com";
+        await client.PostAsJsonAsync("/api/auth/register", new RegisterRequest(email, "Passw0rd!", "P"));
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/auth/login")
+        {
+            Content = JsonContent.Create(new LoginRequest(email, "Passw0rd!"))
+        };
+        request.Headers.Add("X-Forwarded-For", "203.0.113.7");
+        var login = (await (await client.SendAsync(request)).Content.ReadFromJsonAsync<AuthResponse>())!;
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", login.AccessToken);
+
+        var history = await client.GetFromJsonAsync<List<LoginHistoryItemDto>>("/api/users/me/login-history");
+
+        history!.Single().IpAddress.Should().Be("203.0.113.7");
     }
 }

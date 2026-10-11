@@ -1,0 +1,29 @@
+# .NET
+bin/
+obj/
+*.user
+.vs/
+TestResults/
+*.db
+*.db-shm
+*.db-wal
+
+# Node / Expo
+node_modules/
+.expo/
+dist/
+web-build/
+coverage/
+*.log
+.env
+.env.local
+
+# iOS / Android native builds
+ios/
+android/
+*.ipa
+*.apk
+*.aab
+
+# OS
+.DS_Store

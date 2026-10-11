@@ -249,16 +249,18 @@ README with: architecture diagram, setup steps, how to see emails (MailHog `http
 
 ### Phase 8 — Publish to the Apple App Store (M8)
 1. **Deploy the backend** to a public HTTPS host (e.g. Azure App Service or a VPS with Docker). Production config: managed RabbitMQ (e.g. CloudAMQP), real SMTP provider, JWT secret from environment/Key Vault, SQLite file on a persistent volume (or migrate to PostgreSQL/SQL Server if scale requires). Apple requires HTTPS (App Transport Security).
-2. **Apple Developer Program** membership (USD 99/year) and an App Store Connect app record with bundle id, e.g. `com.csharpibocbina.mobileloginauth`.
+2. **[Jay]** **Apple Developer Program** membership (USD 99/year) and an App Store Connect app record with bundle id, e.g. `com.csharpibocbina.mobileloginauth`.
 3. **App config:** `app.config.ts` with `ios.bundleIdentifier`, version/build number, app icon (1024×1024), splash screen, production API URL.
 4. **Build:** `eas build --platform ios --profile production` (EAS handles certificates and provisioning profiles).
-5. **TestFlight:** `eas submit --platform ios`, test on real devices with internal testers.
+5. **[Jay signs in / approves]** **TestFlight:** `eas submit --platform ios`, test on real devices with internal testers.
 6. **App Store review requirements:**
    - Privacy policy URL and App Privacy "nutrition label" (email address, device info, IP collected for security notifications).
    - **In-app account deletion** (required by Apple for apps that support account creation) → add `DELETE /api/users/me` and a "Delete account" button.
    - Demo account credentials for the reviewer in App Review notes.
    - Screenshots for required iPhone sizes, description, keywords, support URL.
-7. **Submit for review** → release.
+7. **[Jay]** **Submit for review** in App Store Connect → release.
+
+Steps marked **[Jay]** need your own Apple Developer account; everything else Claude can prepare.
 
 ### How to run (target)
 ```bash

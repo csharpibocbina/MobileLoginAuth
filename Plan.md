@@ -260,7 +260,7 @@ README with: architecture diagram, setup steps, how to see emails (MailHog `http
    - Screenshots for required iPhone sizes, description, keywords, support URL.
 7. **[Jay]** **Submit for review** in App Store Connect → release.
 
-Steps marked **[Jay]** need your own Apple Developer account; everything else Claude can prepare.
+Steps marked **[Jay]** need your own Apple Developer account; everything else Claude can prepare. Jay will use his own Apple ID: he signs in himself (`eas login` / `eas build` prompts, App Store Connect in the browser) on his machine. The Apple ID password and 2FA codes are never pasted into chat or committed; CI uses an App Store Connect API key stored as a GitHub secret.
 
 ### How to run (target)
 ```bash

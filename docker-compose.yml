@@ -1,0 +1,43 @@
+# Local infrastructure: RabbitMQ (message broker) and MailHog (catches every email the API sends).
+#   RabbitMQ UI:  http://localhost:15672  (guest / guest)
+#   MailHog UI:   http://localhost:8025
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+
+  api:
+    profiles: ["api"]
+    build:
+      context: ./backend
+      dockerfile: src/MobileLoginAuth.Api/Dockerfile
+    ports:
+      - "5080:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__Default: "Data Source=/data/mobileloginauth.db"
+      RabbitMq__Host: rabbitmq
+      Smtp__Host: mailhog
+    volumes:
+      - api-data:/data
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      mailhog:
+        condition: service_started
+
+volumes:
+  api-data:

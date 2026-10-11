@@ -234,7 +234,7 @@ public record AuthEvent(
 4. Manual check: login from Swagger → email visible in MailHog UI, message visible in RabbitMQ UI.
 
 ### Phase 5 — Mobile app (M5)
-1. Navigation (`@react-navigation/native-stack`): `LoginScreen`, `RegisterScreen`, `HomeScreen`.
+1. Navigation with Expo Router (built on React Navigation, protected routes): `LoginScreen`, `RegisterScreen`, `HomeScreen`.
 2. `api/client.ts` (axios) with interceptor that attaches the access token and refreshes on 401.
 3. `AuthContext` (login, logout, register, restore session) storing tokens in `expo-secure-store`.
 4. `useNotifications` hook using `@microsoft/signalr`: connect after login with `accessTokenFactory`, auto-reconnect, disconnect on logout; show toast (`react-native-toast-message`).

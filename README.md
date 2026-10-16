@@ -2,7 +2,7 @@
 
 A React Native (Expo) login app with a C# ASP.NET Core Web API backend. Every **successful login**, **failed login** and **logout** sends the user an **email** and a **real-time SignalR notification**, delivered through **RabbitMQ**.
 
-See [Plan.md](Plan.md) for the full plan, requirements and test list.
+See [Plan.md](Plan.md) for the full plan, requirements and test list, and **[docs/RUNNING.md](docs/RUNNING.md) for a step-by-step guide to running the app on an iPhone**.
 
 | Layer | Tech |
 |---|---|

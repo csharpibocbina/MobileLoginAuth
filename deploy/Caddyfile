@@ -1,0 +1,6 @@
+# Caddy gets and renews a free Let's Encrypt certificate for API_DOMAIN automatically.
+# WebSockets (SignalR) are proxied without extra config.
+{$API_DOMAIN} {
+	encode gzip
+	reverse_proxy api:8080
+}

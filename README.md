@@ -52,6 +52,10 @@ npx expo start          # press i for iOS simulator, a for Android emulator
 
 Or run everything including the API in Docker: `docker compose --profile api up --build`.
 
+## Production
+
+The API runs on a single VPS behind Caddy (automatic HTTPS) with RabbitMQ and SQLite in Docker. Step-by-step guide: [deploy/DEPLOY.md](deploy/DEPLOY.md).
+
 ## API
 
 | Method | Route | Auth | |
@@ -90,7 +94,7 @@ CI runs both on every push (`.github/workflows/ci.yml`).
 
 Steps are in Plan.md, Phase 8. In short:
 
-1. Deploy the API somewhere with **HTTPS** and set `EXPO_PUBLIC_API_URL` in `mobile/eas.json`.
+1. Deploy the API to a VPS with HTTPS by following [deploy/DEPLOY.md](deploy/DEPLOY.md), then set the API URL in `mobile/eas.json`.
 2. `cd mobile && npx eas-cli@latest login` (your Expo account), then `npx eas-cli@latest build --platform ios --profile production` and sign in with **your own Apple ID** when prompted.
 3. `npx eas-cli@latest submit --platform ios` → TestFlight → submit for review in App Store Connect.
 

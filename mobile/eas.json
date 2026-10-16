@@ -10,11 +10,11 @@
     },
     "preview": {
       "distribution": "internal",
-      "env": { "EXPO_PUBLIC_API_URL": "https://REPLACE-WITH-YOUR-API-HOST" }
+      "env": { "EXPO_PUBLIC_API_URL": "https://api.178-128-56-88.sslip.io" }
     },
     "production": {
       "autoIncrement": true,
-      "env": { "EXPO_PUBLIC_API_URL": "https://REPLACE-WITH-YOUR-API-HOST" }
+      "env": { "EXPO_PUBLIC_API_URL": "https://api.178-128-56-88.sslip.io" }
     }
   },
   "submit": {

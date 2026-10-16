@@ -59,6 +59,16 @@ services:
       timeout: 5s
       retries: 10
 
+  # Optional test inbox that catches every email (like Papercut). Start with --profile testmail
+  # and set SMTP_HOST=mailhog, SMTP_PORT=1025, SMTP_USE_SSL=false in .env. View it via SSH tunnel:
+  #   ssh -L 8025:localhost:8025 root@<server>   then open http://localhost:8025
+  mailhog:
+    image: mailhog/mailhog
+    profiles: ["testmail"]
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8025:8025"
+
 volumes:
   caddy-data:
   caddy-config:

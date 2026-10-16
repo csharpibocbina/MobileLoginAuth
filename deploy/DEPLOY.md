@@ -84,6 +84,18 @@ curl https://api.yourdomain.com/health          # → Healthy
 
 In `mobile/eas.json`, replace `https://REPLACE-WITH-YOUR-API-HOST` with `https://api.yourdomain.com` (both `preview` and `production`). For local testing against the server, put the same URL in `mobile/.env` as `EXPO_PUBLIC_API_URL`.
 
+## Test inbox (see emails without an SMTP provider)
+
+Until you sign up for a real SMTP provider, you can catch every email in a test inbox on the server (MailHog, similar to Papercut). On the server:
+
+```bash
+cd /opt/MobileLoginAuth/deploy
+sed -i 's/^SMTP_HOST=.*/SMTP_HOST=mailhog/; s/^SMTP_PORT=.*/SMTP_PORT=1025/; s/^SMTP_USE_SSL=.*/SMTP_USE_SSL=false/' .env
+docker compose -f docker-compose.prod.yml --env-file .env --profile testmail up -d
+```
+
+Then from your PC open a tunnel, `ssh -L 8025:localhost:8025 root@<server IP>`, and browse to http://localhost:8025 while it stays open. The inbox is never exposed to the internet. Emails only reach the test inbox, not the user's real mailbox, so switch to a real provider before launch: put its values in `.env` and run the same `up -d` command without `--profile testmail`.
+
 ## Updating to a new version
 
 ```bash

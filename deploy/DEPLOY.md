@@ -15,6 +15,22 @@ Internet ──443──► Caddy (Let's Encrypt HTTPS) ──► API container 
 | A domain name | Any registrar (Namecheap, Cloudflare, Porkbun). You'll use a subdomain like `api.yourdomain.com`. | ~$10 / year |
 | An SMTP provider | Sends the login emails. Brevo, Mailgun or Amazon SES all have free tiers. | Free to start |
 
+## Quick setup (one command)
+
+If your server and DNS are ready, this does sections 3–5 for you: installs Docker, turns on the firewall, generates the secrets, asks for your hostname and SMTP details, and starts everything.
+
+```bash
+ssh root@<server IP>
+git clone https://github.com/csharpibocbina/MobileLoginAuth.git /opt/MobileLoginAuth
+sudo bash /opt/MobileLoginAuth/deploy/setup-server.sh
+```
+
+- `git clone` asks for your GitHub username and a [personal access token](https://github.com/settings/personal-access-tokens/new) as the password (the repo is private; read-only **Contents** access to MobileLoginAuth is enough).
+- Press Enter at the hostname prompt to use the free `api.<your-ip>.sslip.io` name.
+- You can skip the SMTP questions; the app still works, and you can add them later by editing `deploy/.env` and re-running the script.
+
+It ends with `Done! The API is live at https://...` once HTTPS works. The rest of this guide explains the same steps by hand.
+
 ## 1. Create the server
 
 1. Create an Ubuntu 24.04 VPS and add your SSH key during setup.
